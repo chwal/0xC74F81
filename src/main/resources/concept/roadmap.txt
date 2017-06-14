@@ -1,0 +1,9 @@
+ROADMAP aka TODOs
+
+1. Way moar sprites (SCH)
+2. Movement direction of entities (with equal animation) (SCH)
+3. Unaccessable / Blocking Map-Blocks (PBO)
+3.1 Chests, Doors, Items (PBO)
+4. Movement of other NPCs / Entities on map (equal to player Movement, one step of player = one step of npc)
+5. Shooting / Attacking ability of Player
+6. Shooting / Attacking ability of NPCs
