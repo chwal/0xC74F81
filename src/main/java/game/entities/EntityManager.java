@@ -19,4 +19,8 @@ public class EntityManager {
     public void render(Graphics g) {
         gameEntities.forEach(gameEntity -> gameEntity.render(g));
     }
+
+    public void update(int delta) {
+        gameEntities.forEach(gameEntity -> gameEntity.update(delta));
+    }
 }
