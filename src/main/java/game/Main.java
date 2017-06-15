@@ -1,106 +1,72 @@
 package game;
 
+import game.entities.EntityManager;
+import game.entities.Player;
+import game.input.InputHandler;
+import game.item.Gun;
+import game.item.Helmet;
+import game.map.GameMap;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Point;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import game.entities.Entity;
-import game.entities.Player;
-import org.newdawn.slick.*;
-import org.newdawn.slick.tiled.TiledMap;
-
 public class Main extends BasicGame {
+    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_HEIGHT = 720;
 
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
-    private static final int TILE_SIZE = 40;
+    private EntityManager entityManager;
     private Player player;
 
-    private TiledMap tiledMap;
-    private static int xOffset;
-    private static int yOffset;
+    private GameMap gameMap;
+    private InputHandler inputHandler;
 
-    public Main(String gamename) {
-        super(gamename);
+    private Main(String gameName) {
+        super(gameName);
     }
 
     @Override
     public void init(GameContainer gc) throws SlickException {
-        xOffset = 0;
-        yOffset = 0;
-        tiledMap = new TiledMap("maps/map.tmx");
+        gameMap = new GameMap();
+        entityManager = new EntityManager();
+        inputHandler = new InputHandler(player, gameMap);
+
+        Gun gun = new Gun("gun", new Image("sprites/gun.png"));
+        Helmet helmet = new Helmet("helmet", new Image("sprites/helmet.png"));
+        gameMap.addMapItem(gun, new Point(22, 8));
+        gameMap.addMapItem(helmet, new Point(39, 25));
+
         player = new Player(0, 0);
+        entityManager.addGameEntity(player);
     }
 
-    /**
-     * Gameloop
-     * 1. Update
-     * 2. Render
-     */
     @Override
     public void update(GameContainer gc, int i) throws SlickException {
-        if (gc.getInput().isKeyPressed(Input.KEY_RIGHT)) {
-            moveEntity(player, 'R');
-        } else if (gc.getInput().isKeyPressed(Input.KEY_LEFT)) {
-            moveEntity(player, 'L');
-        } else if (gc.getInput().isKeyPressed(Input.KEY_DOWN)) {
-            moveEntity(player, 'D');
-        } else if (gc.getInput().isKeyPressed(Input.KEY_UP)) {
-            moveEntity(player, 'U');
-        }
+        inputHandler.handleUserInput(gc);
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        tiledMap.render(xOffset, yOffset);
-        g.drawImage(player, player.getX(), player.getY());
-        g.drawString("X: " + player.getX() / TILE_SIZE + ", Y: " + player.getY() / TILE_SIZE, 20, 20);
-    }
+        gameMap.render(g);
+        entityManager.render(g);
 
-    public static void moveEntity(Entity entity, char direction){
-        switch (direction) {
-            case 'R':
-                entity.setX(entity.getX() + TILE_SIZE);
-                if (entity.getX() > WIDTH - TILE_SIZE) {
-                    xOffset = xOffset - WIDTH;
-                    entity.setX(0);
-                }
-                break;
-            case 'L':
-                entity.setX(entity.getX() - TILE_SIZE);
-                if (entity.getX() < 0) {
-                    xOffset = xOffset + WIDTH;
-                    entity.setX(WIDTH - TILE_SIZE);
-                }
-                break;
-            case 'U':
-                entity.setY(entity.getY() - 40);
-                if (entity.getY() < 0) {
-                    yOffset = yOffset + HEIGHT;
-                    entity.setY(HEIGHT - TILE_SIZE);
-                }
-                break;
-            case 'D':
-                entity.setY(entity.getY() + TILE_SIZE);
-                if (entity.getY() > HEIGHT - TILE_SIZE) {
-                    yOffset = yOffset - HEIGHT;
-                    entity.setY(0);
-                }
-                break;
-            default:
-        }
+        //debugging
+        g.setColor(Color.white);
+        g.drawString("X: " + player.getX() / GameMap.TILE_SIZE + ", Y: " + player.getY() / GameMap.TILE_SIZE, 100, 10);
+        g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 300, 10);
     }
 
     public static void main(String[] args) {
         try {
-            AppGameContainer appgc;
-            appgc = new AppGameContainer(new Main("Test"));
-            appgc.setDisplayMode(WIDTH, HEIGHT, false);
-            appgc.setTargetFrameRate(30);
+            AppGameContainer appgc = new AppGameContainer(new Main("Test"));
+            appgc.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, false);
+            appgc.setTargetFrameRate(60);
             appgc.setVSync(false);
             appgc.start();
-        } catch (SlickException ex) {
+        }
+        catch (SlickException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }

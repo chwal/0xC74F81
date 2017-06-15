@@ -1,44 +1,32 @@
 package game.entities;
 
+import game.item.Item;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class Player extends Image implements Entity {
-    private float x;
-    private float y;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Player extends Entity {
+    private Image image;
 
     public Player(float x, float y) throws SlickException {
-        super("sprites/test.png");
-        this.x = x;
-        this.y = y;
+        super(x,y);
+        this.image = new Image("sprites/player.png");
     }
 
-    public float getX() {
-        return x;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public float getY() {
-        return y;
+    @Override
+    void render(Graphics g) {
+        g.drawImage(image, x, y);
+        items.forEach(item -> item.render(g, x, y));
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public Image getImage() {
+        return image;
     }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public boolean isAlive() {
-        return true;
-    }
-
-    public double getHealth() {
-        return 0;
-    }
-
-    public void setHealth(double health) {
-
-    }
-
 }
