@@ -1,8 +1,8 @@
-#0xC74F81
+# 0xC74F81
 
 Totally serious 2d game project.
 
-###ROADMAP aka TODOs
+### ROADMAP aka TODOs
 
 1. Way moar sprites (chwal)
 2. Movement direction of entities (with equal animation) (chwal)
