@@ -30,7 +30,6 @@ public class Main extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         gameMap = new GameMap();
         entityManager = new EntityManager();
-        inputHandler = new InputHandler(player, gameMap);
 
         Gun gun = new Gun("gun", new Image("sprites/gun.png"));
         Helmet helmet = new Helmet("helmet", new Image("sprites/helmet.png"));
@@ -39,6 +38,8 @@ public class Main extends BasicGame {
 
         player = new Player(0, 0);
         entityManager.addGameEntity(player);
+        
+        inputHandler = new InputHandler(player, gameMap);
     }
 
     @Override
