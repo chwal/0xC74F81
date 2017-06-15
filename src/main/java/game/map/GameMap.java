@@ -4,6 +4,7 @@ import game.Main;
 import game.entities.Entity;
 import game.gameobject.GameObject;
 import game.item.Item;
+import javafx.geometry.Pos;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -52,7 +53,7 @@ public class GameMap {
             float actualX = mapPosition.getX() * 40;
             float actualY = mapPosition.getY() * 40;
 
-            if ((currentSectionX + Main.WINDOW_WIDTH >= actualX && currentSectionX <= actualX) &&
+            if((currentSectionX + Main.WINDOW_WIDTH >= actualX && currentSectionX <= actualX) &&
                     (currentSectionY + Main.WINDOW_HEIGHT >= actualY && currentSectionY <= actualY)) {
                 actualX %= Main.WINDOW_WIDTH;
                 actualY %= Main.WINDOW_HEIGHT;
@@ -64,7 +65,7 @@ public class GameMap {
             float actualX = mapPosition.getX() * 40;
             float actualY = mapPosition.getY() * 40;
 
-            if ((currentSectionX + Main.WINDOW_WIDTH >= actualX && currentSectionX <= actualX) &&
+            if((currentSectionX + Main.WINDOW_WIDTH >= actualX && currentSectionX <= actualX) &&
                     (currentSectionY + Main.WINDOW_HEIGHT >= actualY && currentSectionY <= actualY)) {
                 actualX %= Main.WINDOW_WIDTH;
                 actualY %= Main.WINDOW_HEIGHT;
@@ -76,13 +77,14 @@ public class GameMap {
         });
     }
 
+    //TODO: Add collision detection for dynamic map objects (trees)
     public void moveEntity(Entity entity, char direction) {
         switch (direction) {
             case 'R':
-                if (entity.getMapPositionX() + 1 < GameMap.MAP_WIDTH / 40 &&
+                if(entity.getMapPositionX() + 1 < GameMap.MAP_WIDTH / 40 &&
                         tiledMap.getTileId(entity.getMapPositionX() + 1, entity.getMapPositionY(), collisionLayer) == 0) {
                     entity.setX(entity.getX() + GameMap.TILE_SIZE);
-                    if (entity.getX() > Main.WINDOW_WIDTH - GameMap.TILE_SIZE) {
+                    if(entity.getX() > Main.WINDOW_WIDTH - GameMap.TILE_SIZE) {
                         mapXOffset -= Main.WINDOW_WIDTH;
                         entity.setX(0);
                         currentSectionX += Main.WINDOW_WIDTH;
@@ -91,9 +93,9 @@ public class GameMap {
                 }
                 break;
             case 'L':
-                if (entity.getMapPositionX() - 1 >= 0 && tiledMap.getTileId(entity.getMapPositionX() - 1, entity.getMapPositionY(), collisionLayer) == 0) {
+                if(entity.getMapPositionX() - 1 >= 0 && tiledMap.getTileId(entity.getMapPositionX() - 1, entity.getMapPositionY(), collisionLayer) == 0) {
                     entity.setX(entity.getX() - GameMap.TILE_SIZE);
-                    if (entity.getX() < 0) {
+                    if(entity.getX() < 0) {
                         mapXOffset += Main.WINDOW_WIDTH;
                         entity.setX(Main.WINDOW_WIDTH - GameMap.TILE_SIZE);
                         currentSectionX -= Main.WINDOW_WIDTH;
@@ -102,9 +104,9 @@ public class GameMap {
                 }
                 break;
             case 'U':
-                if (entity.getMapPositionY() - 1 >= 0 && tiledMap.getTileId(entity.getMapPositionX(), entity.getMapPositionY() - 1, collisionLayer) == 0) {
+                if(entity.getMapPositionY() - 1 >= 0 && tiledMap.getTileId(entity.getMapPositionX(), entity.getMapPositionY() - 1, collisionLayer) == 0) {
                     entity.setY(entity.getY() - GameMap.TILE_SIZE);
-                    if (entity.getY() < 0) {
+                    if(entity.getY() < 0) {
                         mapYOffset += Main.WINDOW_HEIGHT;
                         entity.setY(Main.WINDOW_HEIGHT - GameMap.TILE_SIZE);
                         currentSectionY -= Main.WINDOW_HEIGHT;
@@ -113,9 +115,9 @@ public class GameMap {
                 }
                 break;
             case 'D':
-                if (entity.getMapPositionY() + 1 < GameMap.MAP_HEIGHT / 40 && tiledMap.getTileId(entity.getMapPositionX(), entity.getMapPositionY() + 1, collisionLayer) == 0) {
+                if(entity.getMapPositionY() + 1 < GameMap.MAP_HEIGHT / 40 && tiledMap.getTileId(entity.getMapPositionX(), entity.getMapPositionY() + 1, collisionLayer) == 0) {
                     entity.setY(entity.getY() + GameMap.TILE_SIZE);
-                    if (entity.getY() > Main.WINDOW_HEIGHT - GameMap.TILE_SIZE) {
+                    if(entity.getY() > Main.WINDOW_HEIGHT - GameMap.TILE_SIZE) {
                         mapYOffset -= Main.WINDOW_HEIGHT;
                         entity.setY(0);
                         currentSectionY += Main.WINDOW_HEIGHT;
@@ -126,18 +128,17 @@ public class GameMap {
                 break;
         }
 
-        Optional<Item> mapItem = getMapItem(entity.getMapPositionX(), entity.getMapPositionY());
-        if (mapItem.isPresent()) {
-            Item item = mapItem.get();
-            entity.getItems().add(item);
-            mapItems.remove(item);
+        Optional<Map.Entry<Point, Item>> optMapItem = getMapItem(entity.getMapPositionX(), entity.getMapPositionY());
+        if(optMapItem.isPresent()) {
+            Map.Entry<Point, Item> itemEntry = optMapItem.get();
+            entity.getItems().add(itemEntry.getValue());
+            mapItems.remove(itemEntry.getKey());
         }
     }
 
-    private Optional<Item> getMapItem(float mapPositionX, float mapPositionY) {
+    private Optional<Map.Entry<Point, Item>> getMapItem(float mapPositionX, float mapPositionY) {
         return mapItems.entrySet().stream()
                 .filter(entry -> entry.getKey().getX() == mapPositionX && entry.getKey().getY() == mapPositionY)
-                .map(Map.Entry::getValue)
                 .findFirst();
     }
 

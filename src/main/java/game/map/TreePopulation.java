@@ -22,6 +22,7 @@ public class TreePopulation {
         this.trees.add(new GameObject(new Image("sprites/tree_1.png"), true));
     }
 
+    //TODO: Consider pre-existing static objects (StaticCollisionLayer), dynamic objects (avoid overlapping) and blocked tiles (BlockedTilesLayer) when spawning trees
     public void populateMap(GameMap gameMap) {
         Random posRandom = new Random();
         Random treeRandom = new Random();

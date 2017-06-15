@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="sileset.tsx"/>
  <layer name="Background" width="64" height="72">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3UMQrAMAwDQCf/f3SXFAqBjlGpb7hdkkNGVQ0AAAAAAHgxl3SOL2zQeYdZdvAW9h3SOdL9bdB3A3+i/s8N0jlskN8gnSGt+zvQv3f/e4N0Bvd3e/31P929e/90Bv0BAAAAAADgXy5rWLK9AEgAAA==
+   H4sIAAAAAAAAC+3DQQ0AAAwDoat/03OxFySsmqqqqqqqqqqqqqqqqqqqqqqq+voAGbe3CwBIAAA=
   </data>
  </layer>
  <layer name="StaticCollisionLayer" width="64" height="72" visible="0">
@@ -11,7 +11,7 @@
    H4sIAAAAAAAAC+3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAAAAAAAAgLcBerjOHQBIAAA=
   </data>
  </layer>
- <layer name="FreeAreaLayer" width="64" height="72">
+ <layer name="BlockedTilesLayer" width="64" height="72">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+2Zi4rEIAxFpf//0UuYLYjEmFjjI9cDZYfdVnMSX9N9UkrP/3UyucPTuLjnTvZvebb8pPzsTBnzl/qe5K8d20n4vabNXeHmOXePxcOS01Vo53lv7DvnoLWme8S6g7+2zl4xrh4H0no+I66Vc0Fzppkdy6x+a3v7yvE4e8zV+t1xTfJov+xrB/c0IY6da/8yY78tP+c/V+Ppz/XhVffeNr1ikvw9GOE/egxwfXjxxWN0Dmrjfwa1dVbyGz0/Z9e+7MdySc9+iaVs1xvtWasnPz2xcDF5M8pz5Foy019L77rQ0/bOWGK13HOCe44lB5o2TvMnrPWV/nayvyZuzV5zItYccM+d7E/05CCK+4vWJ1LdcyxnwYj+RCsHI8/LO6I9M5efo6Bx5+6NhFTz2r3R0M7zqP4Euj+BOP9zamt+SvK6EAnJP3r9Cc1ZKDIt/+hI5z8EfyL6ub8Fuj+B7E6g+xPo/gR6DtDnwd0L5O9FCEjvAxEov/uizQPLe9KocLVHy8HLzcGPmwd+b0ADfQwQqHvjy10Lbg4I1PfmOZwvWh6k/yGg5ICojQUk0GrOgbwn5KD7f+EPCtFWWQBIAAA=
   </data>
