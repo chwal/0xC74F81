@@ -6,6 +6,7 @@ import game.input.InputHandler;
 import game.item.Gun;
 import game.item.Helmet;
 import game.map.GameMap;
+import game.map.MiniMap;
 import game.map.TreePopulation;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Point;
@@ -25,6 +26,7 @@ public class Main extends BasicGame {
     private InputHandler inputHandler;
 
     private TreePopulation treePopulation;
+    private MiniMap miniMap;
 
     private Main(String gameName) {
         super(gameName);
@@ -46,6 +48,7 @@ public class Main extends BasicGame {
         player = new Player(0, 0, new SpriteSheet("sprites/player_walking.png", 40, 40), 2);
         entityManager.addGameEntity(player);
 
+        miniMap = new MiniMap(gameMap, player);
         inputHandler = new InputHandler(player, gameMap);
     }
 
@@ -59,23 +62,14 @@ public class Main extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         gameMap.render(g);
         entityManager.render(g);
-
-        g.scale(0.1f, 0.1f);
-        TiledMap tiledMap = gameMap.getTiledMap();
-        int miniMapX = 10000;
-        int miniMapY = 0;
-        tiledMap.render(miniMapX, miniMapY);
-        g.setColor(Color.black);
-        g.drawRect(miniMapX, miniMapY, (tiledMap.getTileWidth()*tiledMap.getWidth()), (tiledMap.getTileHeight()*tiledMap.getHeight()));
-        g.setColor(Color.red);
-        g.fillRect(miniMapX+player.getX()+gameMap.getCurrentSectionX(), miniMapY+player.getY()+gameMap.getCurrentSectionY(), 80,80);
-        g.scale(1/0.1f, 1/0.1f);
+        miniMap.render(g);
 
         //debugging
         g.setColor(Color.white);
         g.drawString("X: " + player.getX() / GameMap.TILE_SIZE + ", Y: " + player.getY() / GameMap.TILE_SIZE, 100, 10);
         g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 300, 10);
     }
+
 
     public static void main(String[] args) {
         try {
