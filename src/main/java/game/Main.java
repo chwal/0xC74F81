@@ -2,7 +2,6 @@ package game;
 
 import game.entities.EntityManager;
 import game.entities.Player;
-import game.gameobject.GameObject;
 import game.input.InputHandler;
 import game.item.Gun;
 import game.item.Helmet;
@@ -12,7 +11,6 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.tiled.TiledMap;
 
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

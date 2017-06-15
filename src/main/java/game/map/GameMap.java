@@ -4,7 +4,6 @@ import game.Main;
 import game.entities.Entity;
 import game.gameobject.GameObject;
 import game.item.Item;
-import javafx.geometry.Pos;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
