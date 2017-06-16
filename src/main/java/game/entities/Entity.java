@@ -1,6 +1,8 @@
 package game.entities;
 
+import game.Main;
 import game.item.Item;
+import game.map.Direction;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -10,54 +12,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Entity {
+    private float x;
+    private float y;
+    private Direction direction;
+    private List<Item> items;
     private Animation animation;
-    private SpriteSheet spriteSheet;
-    Direction direction;
-    float x;
-    float y;
-    List<Item> items;
 
     Entity(float x, float y, SpriteSheet spriteSheet, int frameCount) {
         this.x = x;
         this.y = y;
         this.direction = Direction.EAST;
         this.items = new ArrayList<>();
-        this.spriteSheet = spriteSheet;
 
         Image[] animationFrames = new Image[frameCount];
-        for(int i = 0; i < frameCount; i++) {
+        for (int i = 0; i < frameCount; i++) {
             animationFrames[i] = spriteSheet.getSprite(i, 0);
         }
 
         animation = new Animation(animationFrames, 250);
     }
 
-    public void render(Graphics g) {
-        g.drawRect(getMapPositionX()*40, getMapPositionY()*40, 40,40);
+    public void render(Graphics g, float displayX, float displayY) {
+        //debugging
+        g.drawRect((getTilePositionX() * 40) % Main.WINDOW_WIDTH, (getTilePositionY() * 40) % Main.WINDOW_HEIGHT, 40, 40);
+
         if(direction.equals(Direction.EAST))
-            animation.draw(x, y);
+            animation.draw(displayX, displayY);
 
-        items.forEach(item -> item.render(g, x, y));
+        items.forEach(item -> item.render(g, displayX, displayY));
     }
 
-    public void update(int delta) {
-        animation.update(delta);
+    public int getTilePositionX() {
+        return (((int) (x + 20) / 40));
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public int getMapPositionX() {
-        return ((int)(x+20)/40);
-    }
-
-    public int getMapPositionY() {
-        return ((int)(y+20)/40);
+    public int getTilePositionY() {
+        return (((int) (y + 20) / 40));
     }
 
     public List<Item> getItems() {

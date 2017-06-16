@@ -1,6 +1,5 @@
 package game;
 
-import game.entities.EntityManager;
 import game.entities.Player;
 import game.input.InputHandler;
 import game.item.Gun;
@@ -10,7 +9,6 @@ import game.map.MiniMap;
 import game.map.TreePopulation;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Point;
-import org.newdawn.slick.tiled.TiledMap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,13 +17,11 @@ public class Main extends BasicGame {
     public static final int WINDOW_WIDTH = 1280;
     public static final int WINDOW_HEIGHT = 720;
 
-    private EntityManager entityManager;
     private Player player;
 
     private GameMap gameMap;
     private InputHandler inputHandler;
 
-    private TreePopulation treePopulation;
     private MiniMap miniMap;
 
     private Main(String gameName) {
@@ -35,8 +31,7 @@ public class Main extends BasicGame {
     @Override
     public void init(GameContainer gc) throws SlickException {
         gameMap = new GameMap();
-        entityManager = new EntityManager();
-        treePopulation = new TreePopulation();
+        TreePopulation treePopulation = new TreePopulation();
         treePopulation.load();
         treePopulation.populateMap(gameMap);
 
@@ -46,30 +41,27 @@ public class Main extends BasicGame {
         gameMap.addMapItem(helmet, new Point(0, 40));
 
         player = new Player(0, 0, new SpriteSheet("sprites/player_walking.png", 40, 40), 2);
-        entityManager.addGameEntity(player);
+        gameMap.addGameEntity(player);
 
         miniMap = new MiniMap(gameMap, player);
-        inputHandler = new InputHandler(player, gameMap);
+        inputHandler = new InputHandler(player, gameMap, miniMap);
     }
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
         inputHandler.handleUserInput(gc, delta);
-        entityManager.update(delta);
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
         gameMap.render(g);
-        entityManager.render(g);
         miniMap.render(g);
 
         //debugging
         g.setColor(Color.white);
-        g.drawString("X: " + player.getMapPositionX() + ", Y: " + player.getMapPositionY(), 200, 10);
+        g.drawString("TileX: " + ((int) (player.getX() + 20) / 40) + ", TileY: " + ((int) (player.getY() + 20) / 40), 200, 10);
         g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 500, 10);
     }
-
 
     public static void main(String[] args) {
         try {
@@ -78,7 +70,8 @@ public class Main extends BasicGame {
             appgc.setTargetFrameRate(60);
             appgc.setVSync(false);
             appgc.start();
-        } catch (SlickException ex) {
+        }
+        catch (SlickException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -14,26 +14,31 @@ public class TreePopulation {
     private List<GameObject> trees;
 
     public TreePopulation() {
-        trees = new ArrayList<>();
+        this.trees = new ArrayList<>();
     }
 
     public void load() throws SlickException {
-        this.trees.add(new GameObject(new Image("sprites/tree_0.png"), true));
-        this.trees.add(new GameObject(new Image("sprites/tree_1.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_0.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_1.png"), true));
     }
 
-    //TODO: Consider pre-existing static objects (StaticCollisionLayer), dynamic objects (avoid overlapping) and blocked tiles (BlockedTilesLayer) when spawning trees
+    //TODO: Fix bug that somehow trees still spawn on 0X or 0Y (display tile coordinates)
     public void populateMap(GameMap gameMap) {
         Random posRandom = new Random();
         Random treeRandom = new Random();
         TiledMap tiledMap = gameMap.getTiledMap();
 
-        for(int i = 0; i < 2000; i++) {
-            float xPos = posRandom.nextInt(tiledMap.getWidth());
-            float yPos = posRandom.nextInt(tiledMap.getHeight());
+        int treeCount = 500;
+        int treesPlaced = 0;
+        while (treesPlaced <= treeCount) {
+            int xPos = posRandom.nextInt(tiledMap.getWidth());
+            int yPos = posRandom.nextInt(tiledMap.getHeight());
 
-            GameObject gameObject = trees.get(treeRandom.nextInt(trees.size()));
-            gameMap.addGameObject(gameObject, new Point(xPos, yPos));
+            if(!gameMap.isBlockedTile(xPos, yPos) && !gameMap.isStaticCollisionTile(xPos, yPos) && !gameMap.isDynamicCollisionTile(xPos, yPos)) {
+                GameObject gameObject = trees.get(treeRandom.nextInt(trees.size()));
+                gameMap.addGameObject(gameObject, new Point(xPos, yPos));
+                treesPlaced++;
+            }
         }
     }
 }

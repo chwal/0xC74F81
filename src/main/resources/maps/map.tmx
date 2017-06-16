@@ -6,9 +6,9 @@
    H4sIAAAAAAAAC+3DQQ0AAAwDoat/03OxFySsmqqqqqqqqqqqqqqqqqqqqqqq+voAGbe3CwBIAAA=
   </data>
  </layer>
- <layer name="StaticCollisionLayer" width="64" height="72" visible="0">
+ <layer name="StaticCollisionLayer" width="64" height="72">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAAAAAAAAgLcBerjOHQBIAAA=
+   H4sIAAAAAAAAC+3PMQ0AAAzDsGr8Qe8Zhx21pQBIAgBAo7latf8DAAAAAAAAAAAAAAAAAAD/Fr942jMASAAA
   </data>
  </layer>
  <layer name="BlockedTilesLayer" width="64" height="72">

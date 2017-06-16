@@ -1,31 +1,43 @@
 package game.input;
 
 import game.entities.Player;
+import game.map.Direction;
 import game.map.GameMap;
+import game.map.MiniMap;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 
 public class InputHandler {
     private final Player player;
     private final GameMap gameMap;
+    private final MiniMap miniMap;
 
-    public InputHandler(Player player, GameMap gameMap) {
+    public InputHandler(Player player, GameMap gameMap, MiniMap miniMap) {
         this.player = player;
         this.gameMap = gameMap;
+        this.miniMap = miniMap;
     }
 
     public void handleUserInput(GameContainer gc, int delta) {
-        if(gc.getInput().isKeyDown(Input.KEY_RIGHT) || gc.getInput().isKeyDown(Input.KEY_D)) {
-            gameMap.moveEntity(player, 'R', delta);
+        Input input = gc.getInput();
+
+        if(input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_D)) {
+            gameMap.moveEntity(player, Direction.EAST, delta);
         }
-        if(gc.getInput().isKeyDown(Input.KEY_LEFT) || gc.getInput().isKeyDown(Input.KEY_A)) {
-            gameMap.moveEntity(player, 'L', delta);
+        if(input.isKeyDown(Input.KEY_LEFT) || input.isKeyDown(Input.KEY_A)) {
+            gameMap.moveEntity(player, Direction.WEST, delta);
         }
-        if(gc.getInput().isKeyDown(Input.KEY_DOWN) || gc.getInput().isKeyDown(Input.KEY_S)) {
-            gameMap.moveEntity(player, 'D', delta);
+        if(input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_S)) {
+            gameMap.moveEntity(player, Direction.SOUTH, delta);
         }
-        if(gc.getInput().isKeyDown(Input.KEY_UP) || gc.getInput().isKeyDown(Input.KEY_W)) {
-            gameMap.moveEntity(player, 'U', delta);
+        if(input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_W)) {
+            gameMap.moveEntity(player, Direction.NORTH, delta);
+        }
+
+        if(input.isKeyDown(Input.KEY_TAB)) {
+            miniMap.setShowMiniMap(true);
+        } else {
+            miniMap.setShowMiniMap(false);
         }
     }
 }
