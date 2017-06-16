@@ -28,7 +28,7 @@ public class TreePopulation {
         Random treeRandom = new Random();
         TiledMap tiledMap = gameMap.getTiledMap();
 
-        for(int i = 0; i < 200; i++) {
+        for(int i = 0; i < 2000; i++) {
             float xPos = posRandom.nextInt(tiledMap.getWidth());
             float yPos = posRandom.nextInt(tiledMap.getHeight());
 

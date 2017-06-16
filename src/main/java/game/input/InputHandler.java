@@ -14,15 +14,18 @@ public class InputHandler {
         this.gameMap = gameMap;
     }
 
-    public void handleUserInput(GameContainer gc) {
-        if(gc.getInput().isKeyPressed(Input.KEY_RIGHT) || gc.getInput().isKeyPressed(Input.KEY_D)) {
-            gameMap.moveEntity(player, 'R');
-        } else if(gc.getInput().isKeyPressed(Input.KEY_LEFT) || gc.getInput().isKeyPressed(Input.KEY_A)) {
-            gameMap.moveEntity(player, 'L');
-        } else if(gc.getInput().isKeyPressed(Input.KEY_DOWN) || gc.getInput().isKeyPressed(Input.KEY_S)) {
-            gameMap.moveEntity(player, 'D');
-        } else if(gc.getInput().isKeyPressed(Input.KEY_UP) || gc.getInput().isKeyPressed(Input.KEY_W)) {
-            gameMap.moveEntity(player, 'U');
+    public void handleUserInput(GameContainer gc, int delta) {
+        if(gc.getInput().isKeyDown(Input.KEY_RIGHT) || gc.getInput().isKeyDown(Input.KEY_D)) {
+            gameMap.moveEntity(player, 'R', delta);
+        }
+        if(gc.getInput().isKeyDown(Input.KEY_LEFT) || gc.getInput().isKeyDown(Input.KEY_A)) {
+            gameMap.moveEntity(player, 'L', delta);
+        }
+        if(gc.getInput().isKeyDown(Input.KEY_DOWN) || gc.getInput().isKeyDown(Input.KEY_S)) {
+            gameMap.moveEntity(player, 'D', delta);
+        }
+        if(gc.getInput().isKeyDown(Input.KEY_UP) || gc.getInput().isKeyDown(Input.KEY_W)) {
+            gameMap.moveEntity(player, 'U', delta);
         }
     }
 }

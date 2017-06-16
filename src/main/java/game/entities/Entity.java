@@ -12,8 +12,6 @@ import java.util.List;
 public abstract class Entity {
     private Animation animation;
     private SpriteSheet spriteSheet;
-    private int mapPositionX;
-    private int mapPositionY;
     Direction direction;
     float x;
     float y;
@@ -22,8 +20,6 @@ public abstract class Entity {
     Entity(float x, float y, SpriteSheet spriteSheet, int frameCount) {
         this.x = x;
         this.y = y;
-        this.mapPositionX = 0;
-        this.mapPositionY = 0;
         this.direction = Direction.EAST;
         this.items = new ArrayList<>();
         this.spriteSheet = spriteSheet;
@@ -37,6 +33,7 @@ public abstract class Entity {
     }
 
     public void render(Graphics g) {
+        g.drawRect(getMapPositionX()*40, getMapPositionY()*40, 40,40);
         if(direction.equals(Direction.EAST))
             animation.draw(x, y);
 
@@ -56,19 +53,11 @@ public abstract class Entity {
     }
 
     public int getMapPositionX() {
-        return mapPositionX;
-    }
-
-    public void setMapPositionX(int mapPositionX) {
-        this.mapPositionX = mapPositionX;
+        return ((int)(x+20)/40);
     }
 
     public int getMapPositionY() {
-        return mapPositionY;
-    }
-
-    public void setMapPositionY(int mapPositionY) {
-        this.mapPositionY = mapPositionY;
+        return ((int)(y+20)/40);
     }
 
     public List<Item> getItems() {

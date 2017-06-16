@@ -54,7 +54,7 @@ public class Main extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
-        inputHandler.handleUserInput(gc);
+        inputHandler.handleUserInput(gc, delta);
         entityManager.update(delta);
     }
 
@@ -66,8 +66,8 @@ public class Main extends BasicGame {
 
         //debugging
         g.setColor(Color.white);
-        g.drawString("X: " + player.getX() / GameMap.TILE_SIZE + ", Y: " + player.getY() / GameMap.TILE_SIZE, 100, 10);
-        g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 300, 10);
+        g.drawString("X: " + player.getMapPositionX() + ", Y: " + player.getMapPositionY(), 200, 10);
+        g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 500, 10);
     }
 
 

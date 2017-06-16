@@ -21,6 +21,8 @@ public class GameMap {
     private static final int MAP_WIDTH = Main.WINDOW_WIDTH * SECTION_DIMENSION_X;
     public static final int TILE_SIZE = 40;
 
+    private static final  float SPEED_IN_PX_PER_MS = (100.0f/1000);
+
     private TiledMap tiledMap;
 
     private int mapXOffset;
@@ -77,53 +79,52 @@ public class GameMap {
     }
 
     //TODO: Add collision detection for dynamic map objects (trees)
-    public void moveEntity(Entity entity, char direction) {
+    public void moveEntity(Entity entity, char direction, int delta) {
         switch (direction) {
             case 'R':
-                if(entity.getMapPositionX() + 1 < GameMap.MAP_WIDTH / 40 &&
-                        tiledMap.getTileId(entity.getMapPositionX() + 1, entity.getMapPositionY(), collisionLayer) == 0) {
-                    entity.setX(entity.getX() + GameMap.TILE_SIZE);
+                float newXPos = entity.getX() - SPEED_IN_PX_PER_MS * delta;
+                if(newXPos >= 0 && ((int)(newXPos+20)/40) >= 0 && tiledMap.getTileId(((int)(newXPos+20)/40), entity.getMapPositionY(), collisionLayer) == 0) {
+                    entity.setX(newXPos);
+                    entity.setX(entity.getX() + SPEED_IN_PX_PER_MS * delta);
                     if(entity.getX() > Main.WINDOW_WIDTH - GameMap.TILE_SIZE) {
                         mapXOffset -= Main.WINDOW_WIDTH;
                         entity.setX(0);
                         currentSectionX += Main.WINDOW_WIDTH;
                     }
-                    entity.setMapPositionX(entity.getMapPositionX() + 1);
                 }
                 break;
             case 'L':
-                if(entity.getMapPositionX() - 1 >= 0 && tiledMap.getTileId(entity.getMapPositionX() - 1, entity.getMapPositionY(), collisionLayer) == 0) {
-                    entity.setX(entity.getX() - GameMap.TILE_SIZE);
+                float newXPos_1 = entity.getX() - SPEED_IN_PX_PER_MS * delta;
+                if(newXPos_1 >= 0 && ((int)(newXPos_1+20)/40) >= 0 && tiledMap.getTileId(((int)(newXPos_1+20)/40), entity.getMapPositionY(), collisionLayer) == 0) {
+                    entity.setX(newXPos_1);
                     if(entity.getX() < 0) {
                         mapXOffset += Main.WINDOW_WIDTH;
                         entity.setX(Main.WINDOW_WIDTH - GameMap.TILE_SIZE);
                         currentSectionX -= Main.WINDOW_WIDTH;
                     }
-                    entity.setMapPositionX(entity.getMapPositionX() - 1);
                 }
                 break;
             case 'U':
-                if(entity.getMapPositionY() - 1 >= 0 && tiledMap.getTileId(entity.getMapPositionX(), entity.getMapPositionY() - 1, collisionLayer) == 0) {
-                    entity.setY(entity.getY() - GameMap.TILE_SIZE);
+                float newYPos = entity.getY() - SPEED_IN_PX_PER_MS * delta;
+                if(newYPos >= 0 && ((int)(newYPos+20)/40) >= 0 && tiledMap.getTileId(((int)(newYPos+20)/40), entity.getMapPositionY() - 1, collisionLayer) == 0) {
+                    entity.setY(newYPos);
                     if(entity.getY() < 0) {
                         mapYOffset += Main.WINDOW_HEIGHT;
                         entity.setY(Main.WINDOW_HEIGHT - GameMap.TILE_SIZE);
                         currentSectionY -= Main.WINDOW_HEIGHT;
                     }
-                    entity.setMapPositionY(entity.getMapPositionY() - 1);
                 }
                 break;
             case 'D':
-                if(entity.getMapPositionY() + 1 < GameMap.MAP_HEIGHT / 40 && tiledMap.getTileId(entity.getMapPositionX(), entity.getMapPositionY() + 1, collisionLayer) == 0) {
-                    entity.setY(entity.getY() + GameMap.TILE_SIZE);
+                float newYPos_1 = entity.getY() + SPEED_IN_PX_PER_MS * delta;
+                if(newYPos_1 >= 0 && ((int)(newYPos_1+20)/40) >= 0 && tiledMap.getTileId(((int)(newYPos_1+20)/40), entity.getMapPositionY() + 1, collisionLayer) == 0) {
+                    entity.setY(newYPos_1);
                     if(entity.getY() > Main.WINDOW_HEIGHT - GameMap.TILE_SIZE) {
                         mapYOffset -= Main.WINDOW_HEIGHT;
                         entity.setY(0);
                         currentSectionY += Main.WINDOW_HEIGHT;
                     }
-                    entity.setMapPositionY(entity.getMapPositionY() + 1);
                 }
-
                 break;
         }
 
