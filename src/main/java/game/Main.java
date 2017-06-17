@@ -2,6 +2,7 @@ package game;
 
 import game.entities.Player;
 import game.input.InputHandler;
+import game.item.Armor;
 import game.item.Gun;
 import game.item.Helmet;
 import game.map.GameMap;
@@ -38,9 +39,11 @@ public class Main extends BasicGame {
         Gun gun = new Gun("gun", new Image("sprites/sub_gun.png"));
         Gun gun2 = new Gun("gun2", new Image("sprites/sniper_gun.png"));
         Helmet helmet = new Helmet("helmet", new Image("sprites/helmet.png"));
+        Armor armor = new Armor("armor", new Image("sprites/armor.png"));
         gameMap.addMapItem(gun, new Point(4, 21));
         gameMap.addMapItem(gun2, new Point(5, 21));
         gameMap.addMapItem(helmet, new Point(6, 21));
+        gameMap.addMapItem(armor, new Point(6, 22));
 
         player = new Player(0, 0, new SpriteSheet("sprites/player_walking.png", 40, 40), 2);
         gameMap.addGameEntity(player);
