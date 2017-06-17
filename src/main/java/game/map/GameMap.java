@@ -19,9 +19,6 @@ public class GameMap {
     private static final int MAP_WIDTH = Main.WINDOW_WIDTH * SECTION_DIMENSION_X;
     private static final int TILE_SIZE = 40;
 
-    //TODO: Move the velocity to the concrete entity classes (velocity of entities can differ)
-    private static final float SPEED_IN_PX_PER_MS = (100.0f / 1000);
-
     private TiledMap tiledMap;
 
     private int mapXOffset;
@@ -64,9 +61,9 @@ public class GameMap {
             }
         });
 
-        mapObjects.forEach((mapPosition, mapObject) -> {
-            float actualX = mapPosition.getX() * 40;
-            float actualY = mapPosition.getY() * 40;
+        mapObjects.forEach((tilePosition, mapObject) -> {
+            float actualX = tilePosition.getX() * 40;
+            float actualY = tilePosition.getY() * 40;
 
             if(isCurrentlyVisible(actualX, actualY)) {
                 actualX %= Main.WINDOW_WIDTH;
@@ -78,16 +75,16 @@ public class GameMap {
         Color temp = g.getColor();
         g.setColor(Color.yellow);
 
-        mapItems.forEach((mapPosition, item) -> {
-            float actualX = mapPosition.getX() * 40;
-            float actualY = mapPosition.getY() * 40;
+        mapItems.forEach((tilePosition, item) -> {
+            float actualX = tilePosition.getX() * 40;
+            float actualY = tilePosition.getY() * 40;
 
             if(isCurrentlyVisible(actualX, actualY)) {
                 actualX %= Main.WINDOW_WIDTH;
                 actualY %= Main.WINDOW_HEIGHT;
 
                 g.drawRect(actualX, actualY, 40, 40);
-                item.render(g, actualX, actualY);
+                item.render(g, actualX, actualY, false);
             }
         });
 
@@ -95,7 +92,7 @@ public class GameMap {
     }
 
     private boolean isCurrentlyVisible(float x, float y) {
-        return (currentSectionX + Main.WINDOW_WIDTH >= x && currentSectionX <= x) && (currentSectionY + Main.WINDOW_HEIGHT >= y && currentSectionY <= y);
+        return (currentSectionX + Main.WINDOW_WIDTH > x && currentSectionX <= x) && (currentSectionY + Main.WINDOW_HEIGHT > y && currentSectionY <= y);
     }
 
     public void moveEntity(Entity entity, Direction direction, int delta) {
@@ -104,47 +101,48 @@ public class GameMap {
         float newXPos = oldXPos;
         float newYPos = oldYPos;
 
+        if(direction.equals(Direction.EAST) || direction.equals(Direction.WEST))
+            entity.setFacing(direction);
+
+        entity.setMoving(true);
+
+        float distanceCovered = (entity.getVelocity() / 1000) * delta;
         switch (direction) {
             case NORTH:
-                newYPos -= SPEED_IN_PX_PER_MS * delta;
+                newYPos -= distanceCovered;
                 break;
             case EAST:
-                newXPos += SPEED_IN_PX_PER_MS * delta;
+                newXPos += distanceCovered;
                 break;
             case SOUTH:
-                newYPos += SPEED_IN_PX_PER_MS * delta;
+                newYPos += distanceCovered;
                 break;
             case WEST:
-                newXPos -= SPEED_IN_PX_PER_MS * delta;
+                newXPos -= distanceCovered;
                 break;
         }
 
         //map restriction
+        //TODO: Fix bug: switching sections upwards and downwards when there's collision
         if((newXPos >= 0 && newXPos <= MAP_WIDTH - TILE_SIZE) && (newYPos >= 0 && newYPos <= MAP_HEIGHT - TILE_SIZE)) {
-            int tileX = (((int) (newXPos + 10) / 40));
-            int tileY = (((int) (newYPos + 10) / 40));
-            int tileX2 = (((int) (newXPos + 30) / 40));
-            int tileY2 = (((int) (newYPos + 30) / 40));
-
             //collision detection
-            //TODO: Rework collision detection for dynamic game objects (improve intersection detection, use whole rectangle instead of 2 fixpoints)
-            if(!isStaticCollisionTile(tileX, tileY) && !isDynamicCollisionTile(tileX, tileY) && !isStaticCollisionTile(tileX2, tileY2) && !isDynamicCollisionTile(tileX2, tileY2)) {
+            if(!isColliding(newXPos, newYPos)) {
                 entity.setX(newXPos);
                 entity.setY(newYPos);
 
-                if(oldXPos < newXPos && (newXPos + 40) % Main.WINDOW_WIDTH < oldXPos % Main.WINDOW_WIDTH) {
+                if(oldXPos < newXPos && (newXPos + 40) % Main.WINDOW_WIDTH < oldXPos % Main.WINDOW_WIDTH && !isColliding(newXPos + GameMap.TILE_SIZE, newYPos)) {
                     mapXOffset -= Main.WINDOW_WIDTH;
                     entity.setX(entity.getX() + GameMap.TILE_SIZE);
                     currentSectionX += Main.WINDOW_WIDTH;
-                } else if(oldXPos > newXPos && newXPos % Main.WINDOW_WIDTH > oldXPos % Main.WINDOW_WIDTH) {
+                } else if(oldXPos > newXPos && newXPos % Main.WINDOW_WIDTH > oldXPos % Main.WINDOW_WIDTH && !isColliding(newXPos - GameMap.TILE_SIZE, newYPos)) {
                     mapXOffset += Main.WINDOW_WIDTH;
                     entity.setX(entity.getX() - GameMap.TILE_SIZE);
                     currentSectionX -= Main.WINDOW_WIDTH;
-                } else if(oldYPos < newYPos && (newYPos + 40) % Main.WINDOW_HEIGHT < oldYPos % Main.WINDOW_HEIGHT) {
+                } else if(oldYPos < newYPos && (newYPos + 40) % Main.WINDOW_HEIGHT < oldYPos % Main.WINDOW_HEIGHT && !isColliding(newXPos, newYPos + GameMap.TILE_SIZE)) {
                     mapYOffset -= Main.WINDOW_HEIGHT;
                     entity.setY(entity.getY() + GameMap.TILE_SIZE);
                     currentSectionY += Main.WINDOW_HEIGHT;
-                } else if(oldYPos > newYPos && (newYPos) % Main.WINDOW_HEIGHT > oldYPos % Main.WINDOW_HEIGHT) {
+                } else if(oldYPos > newYPos && (newYPos) % Main.WINDOW_HEIGHT > oldYPos % Main.WINDOW_HEIGHT && !isColliding(newXPos, newYPos - GameMap.TILE_SIZE)) {
                     mapYOffset += Main.WINDOW_HEIGHT;
                     entity.setY(entity.getY() - GameMap.TILE_SIZE);
                     currentSectionY -= Main.WINDOW_HEIGHT;
@@ -161,8 +159,18 @@ public class GameMap {
         }
     }
 
+    //TODO: Rework collision detection for dynamic game objects (improve intersection detection, use whole rectangle instead of 2 fixpoints)
+    private boolean isColliding(float newXPos, float newYPos) {
+        int tileX = (((int) (newXPos + 10) / 40));
+        int tileY = (((int) (newYPos + 10) / 40));
+        int tileX2 = (((int) (newXPos + 30) / 40));
+        int tileY2 = (((int) (newYPos + 30) / 40));
+
+        return isStaticCollisionTile(tileX, tileY) || isDynamicCollisionTile(tileX, tileY) || isStaticCollisionTile(tileX2, tileY2) || isDynamicCollisionTile(tileX2, tileY2);
+    }
+
     //TODO: Increase performance (make use of HashMap hashcode implementation - no iteration required)
-    boolean isDynamicCollisionTile(int xPos, int yPos) {
+    public boolean isDynamicCollisionTile(int xPos, int yPos) {
         return mapObjects.entrySet().stream()
                 .filter(entry -> entry.getKey().getX() == xPos && entry.getKey().getY() == yPos)
                 .filter(entry -> entry.getValue().isCollision())
@@ -170,11 +178,11 @@ public class GameMap {
                 .orElse(null) != null;
     }
 
-    boolean isStaticCollisionTile(int tileX, int tileY) {
+    public boolean isStaticCollisionTile(int tileX, int tileY) {
         return tiledMap.getTileId(tileX, tileY, staticCollisionLayer) != 0;
     }
 
-    boolean isBlockedTile(int tileX, int tileY) {
+    public boolean isBlockedTile(int tileX, int tileY) {
         return tiledMap.getTileId(tileX, tileY, blockedTilesLayer) != 0;
     }
 
@@ -188,7 +196,7 @@ public class GameMap {
                 .findFirst();
     }
 
-    void addGameObject(GameObject gameObject, Point position) {
+    public void addGameObject(GameObject gameObject, Point position) {
         this.mapObjects.put(position, gameObject);
     }
 
@@ -196,7 +204,7 @@ public class GameMap {
         this.mapItems.put(position, item);
     }
 
-    TiledMap getTiledMap() {
+    public TiledMap getTiledMap() {
         return tiledMap;
     }
 }

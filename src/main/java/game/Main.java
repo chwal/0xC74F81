@@ -8,7 +8,7 @@ import game.item.Gun;
 import game.item.Helmet;
 import game.map.GameMap;
 import game.map.MiniMap;
-import game.map.TreePopulation;
+import game.map.population.TreePopulation;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Point;
 

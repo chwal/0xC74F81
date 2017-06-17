@@ -1,6 +1,5 @@
 package game.entities;
 
-import game.Main;
 import game.item.Item;
 import game.map.Direction;
 import org.newdawn.slick.Animation;
@@ -14,15 +13,20 @@ import java.util.List;
 public abstract class Entity {
     private float x;
     private float y;
-    private Direction direction;
+    private float velocity;
     private List<Item> items;
-    private Animation animation;
+    private boolean moving;
+    private Direction facing;
+    Animation animation;
 
-    Entity(float x, float y, SpriteSheet spriteSheet, int frameCount) {
+
+    Entity(float x, float y, SpriteSheet spriteSheet, int frameCount, float velocity) {
         this.x = x;
         this.y = y;
-        this.direction = Direction.EAST;
         this.items = new ArrayList<>();
+        this.moving = false;
+        this.facing = Direction.EAST;
+        this.velocity = 100.0f;
 
         Image[] animationFrames = new Image[frameCount];
         for (int i = 0; i < frameCount; i++) {
@@ -33,13 +37,16 @@ public abstract class Entity {
     }
 
     public void render(Graphics g, float displayX, float displayY) {
-        //debugging
-        g.drawRect((getTilePositionX() * 40) % Main.WINDOW_WIDTH, (getTilePositionY() * 40) % Main.WINDOW_HEIGHT, 40, 40);
+        boolean flipped = facing == Direction.WEST;
+        animation.getCurrentFrame().getFlippedCopy(flipped, false).draw(displayX, displayY);
 
-        if(direction.equals(Direction.EAST))
-            animation.draw(displayX, displayY);
+        if(moving) {
+            animation.update(20);
+        } else {
+            animation.setCurrentFrame(1);
+        }
 
-        items.forEach(item -> item.render(g, displayX, displayY));
+        items.forEach(item -> item.render(g, displayX, displayY, flipped));
     }
 
     public int getTilePositionX() {
@@ -68,5 +75,21 @@ public abstract class Entity {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public void setFacing(Direction facing) {
+        this.facing = facing;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
     }
 }

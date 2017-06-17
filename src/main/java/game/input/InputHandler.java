@@ -34,6 +34,18 @@ public class InputHandler {
             gameMap.moveEntity(player, Direction.NORTH, delta);
         }
 
+        //debugging
+        if(input.isKeyDown(Input.KEY_LSHIFT)) {
+            player.setVelocity(300.0f);
+        } else {
+            player.setVelocity(100.0f);
+        }
+
+        if(!input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_D) && !input.isKeyDown(Input.KEY_LEFT) && !input.isKeyDown(Input.KEY_A) &&
+                !input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_S) && !input.isKeyDown(Input.KEY_UP) && !input.isKeyDown(Input.KEY_W)) {
+            player.setMoving(false);
+        }
+
         if(input.isKeyDown(Input.KEY_TAB)) {
             miniMap.setShowMiniMap(true);
         } else {
