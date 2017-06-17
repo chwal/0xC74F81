@@ -36,9 +36,11 @@ public class Main extends BasicGame {
         treePopulation.populateMap(gameMap);
 
         Gun gun = new Gun("gun", new Image("sprites/sub_gun.png"));
+        Gun gun2 = new Gun("gun2", new Image("sprites/sniper_gun.png"));
         Helmet helmet = new Helmet("helmet", new Image("sprites/helmet.png"));
-        gameMap.addMapItem(gun, new Point(22, 8));
-        gameMap.addMapItem(helmet, new Point(0, 40));
+        gameMap.addMapItem(gun, new Point(4, 21));
+        gameMap.addMapItem(gun2, new Point(5, 21));
+        gameMap.addMapItem(helmet, new Point(6, 21));
 
         player = new Player(0, 0, new SpriteSheet("sprites/player_walking.png", 40, 40), 2);
         gameMap.addGameEntity(player);
