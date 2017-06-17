@@ -28,7 +28,7 @@ public class TreePopulation {
         Random treeRandom = new Random();
         TiledMap tiledMap = gameMap.getTiledMap();
 
-        int treeCount = 500;
+        int treeCount = 1337;
         int treesPlaced = 0;
         while (treesPlaced <= treeCount) {
             int xPos = posRandom.nextInt(tiledMap.getWidth());
