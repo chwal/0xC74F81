@@ -18,8 +18,15 @@ public class TreePopulation {
     }
 
     public void load() throws SlickException {
+        //Duplications because of less broken tree generation
+        trees.add(new GameObject(new Image("sprites/tree_0.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_0.png"), true));
         trees.add(new GameObject(new Image("sprites/tree_0.png"), true));
         trees.add(new GameObject(new Image("sprites/tree_1.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_1.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_1.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_2.png"), true));
+        trees.add(new GameObject(new Image("sprites/tree_3.png"), true));
     }
 
     //TODO: Fix bug that somehow trees still spawn on 0X or 0Y (display tile coordinates)
@@ -28,7 +35,7 @@ public class TreePopulation {
         Random treeRandom = new Random();
         TiledMap tiledMap = gameMap.getTiledMap();
 
-        int treeCount = 1000;
+        int treeCount = 1300;
         int treesPlaced = 0;
         while (treesPlaced <= treeCount) {
             int xPos = posRandom.nextInt(tiledMap.getWidth());
