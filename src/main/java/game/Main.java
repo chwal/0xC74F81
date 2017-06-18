@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class Main extends BasicGame {
     public static final int WINDOW_WIDTH = 1280;
     public static final int WINDOW_HEIGHT = 720;
+    public static boolean debugMode = false;
 
     private Player player;
 
@@ -67,21 +68,26 @@ public class Main extends BasicGame {
         gameMap.render(g);
         miniMap.render(g);
 
-        //debugging
-        g.setColor(Color.white);
-        g.drawString("TileX: " + ((int) (player.getX() + 20) / 40) + ", TileY: " + ((int) (player.getY() + 20) / 40), 200, 10);
-        g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 500, 10);
+        if (debugMode) {
+            g.setColor(Color.white);
+            g.drawString("TileX: " + ((int) (player.getX() + 20) / 40) + ", TileY: " + ((int) (player.getY() + 20) / 40), 200, 10);
+            g.drawString("X: " + player.getX() + ", Y: " + player.getY(), 500, 10);
+        }
     }
 
     public static void main(String[] args) {
+        for (String arg : args) {
+            if (arg.toLowerCase().contains("debug")) {
+                debugMode = true;
+            }
+        }
         try {
-            AppGameContainer appgc = new AppGameContainer(new Main("Test"));
+            AppGameContainer appgc = new AppGameContainer(new Main("0xC74F81"));
             appgc.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, false);
             appgc.setTargetFrameRate(60);
             appgc.setVSync(false);
             appgc.start();
-        }
-        catch (SlickException ex) {
+        } catch (SlickException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
