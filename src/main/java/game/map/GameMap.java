@@ -47,31 +47,19 @@ public class GameMap {
         currentSectionY = 0;
     }
 
+    public void update(int delta) {
+        gameEntities.forEach(gameEntity -> gameEntity.update(delta, this));
+    }
+
     public void render(Graphics g) {
         tiledMap.render(mapXOffset, mapYOffset);
 
-        gameEntities.forEach(gameEntity -> {
-            float x = gameEntity.getX();
-            float y = gameEntity.getY();
+        renderGameEntities(g);
+        renderMapObjects();
+        renderMapItems(g);
+    }
 
-            if(isCurrentlyVisible(x, y)) {
-                x %= Main.WINDOW_WIDTH;
-                y %= Main.WINDOW_HEIGHT;
-                gameEntity.render(g, x, y);
-            }
-        });
-
-        mapObjects.forEach((tilePosition, mapObject) -> {
-            float actualX = tilePosition.getX() * 40;
-            float actualY = tilePosition.getY() * 40;
-
-            if(isCurrentlyVisible(actualX, actualY)) {
-                actualX %= Main.WINDOW_WIDTH;
-                actualY %= Main.WINDOW_HEIGHT;
-                mapObject.getImage().draw(actualX, actualY);
-            }
-        });
-
+    private void renderMapItems(Graphics g) {
         Color temp = g.getColor();
         g.setColor(Color.yellow);
 
@@ -89,6 +77,32 @@ public class GameMap {
         });
 
         g.setColor(temp);
+    }
+
+    private void renderMapObjects() {
+        mapObjects.forEach((tilePosition, mapObject) -> {
+            float actualX = tilePosition.getX() * 40;
+            float actualY = tilePosition.getY() * 40;
+
+            if(isCurrentlyVisible(actualX, actualY)) {
+                actualX %= Main.WINDOW_WIDTH;
+                actualY %= Main.WINDOW_HEIGHT;
+                mapObject.getImage().draw(actualX, actualY);
+            }
+        });
+    }
+
+    private void renderGameEntities(Graphics g) {
+        gameEntities.forEach(gameEntity -> {
+            float x = gameEntity.getX();
+            float y = gameEntity.getY();
+
+            if(isCurrentlyVisible(x, y)) {
+                x %= Main.WINDOW_WIDTH;
+                y %= Main.WINDOW_HEIGHT;
+                gameEntity.render(g, x, y);
+            }
+        });
     }
 
     private boolean isCurrentlyVisible(float x, float y) {

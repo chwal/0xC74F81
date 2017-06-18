@@ -1,7 +1,11 @@
 package game.entities;
 
+import game.item.Armor;
+import game.item.Gun;
+import game.item.Helmet;
 import game.item.Item;
 import game.map.Direction;
+import game.map.GameMap;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -11,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Entity {
-    private float x;
+    float x;
     private float y;
-    private float velocity;
+    float velocity;
     private List<Item> items;
     private boolean moving;
     private Direction facing;
@@ -40,13 +44,23 @@ public abstract class Entity {
         boolean flipped = facing == Direction.WEST;
         animation.getCurrentFrame().getFlippedCopy(flipped, false).draw(displayX, displayY);
 
-        if(moving) {
-            animation.update(20);
-        } else {
-            animation.setCurrentFrame(1);
+        if(!moving) {
+            animation.setCurrentFrame(0);
         }
 
-        items.forEach(item -> item.render(g, displayX, displayY, flipped));
+        items.stream()
+                .filter(item -> item instanceof Armor || item instanceof Helmet)
+                .forEach(item -> item.render(g, displayX, displayY, flipped));
+
+        items.stream()
+                .filter(item -> item instanceof Gun)
+                .forEach(item -> item.render(g, displayX, displayY, flipped));
+    }
+
+    public void update(int delta, GameMap gameMap) {
+        if(moving) {
+            animation.update(delta);
+        }
     }
 
     public int getTilePositionX() {
